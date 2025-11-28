@@ -1,4 +1,4 @@
-import { Car, Calendar, Heart } from "lucide-react";
+import { Car, Calendar, Heart, SquareGanttChart } from "lucide-react";
 
 
 export const dataGeneralSidebar = [
@@ -17,4 +17,17 @@ export const dataGeneralSidebar = [
         label: "Loved Cars",
         href: "/loved_cars"
     }
-]
+];
+
+export const dataAdminSidebar = [
+    {
+        icon: SquareGanttChart,
+        label: "Manage Cars",
+        href: "/dashboard/admin/cars-manager"
+    },
+    {
+        icon: Calendar,
+        label: "Manage Reserves",
+        href: "/dashboard/admin/reserves-admin"
+    }
+];
