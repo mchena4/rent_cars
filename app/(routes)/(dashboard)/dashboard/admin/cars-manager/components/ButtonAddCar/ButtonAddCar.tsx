@@ -27,8 +27,8 @@ export function ButtonAddCar() {
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogDescription>
-                        <FormAddCar />
+                    <DialogDescription asChild>
+                        <FormAddCar/>
                     </DialogDescription>
                 </DialogHeader>
             </DialogContent>
