@@ -2,10 +2,8 @@
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -18,17 +16,20 @@ export function ButtonAddCar() {
     const [openDialog, setOpenDialog] = useState(false);
 
     return (
-        < Dialog open={openDialog}>
+        < Dialog open={openDialog} onOpenChange={setOpenDialog}>
             <DialogTrigger asChild>
-                <Button variant="outline" onClick={() => setOpenDialog(true)}>
+                <Button variant="outline">
                     Add new car 
                     <PlusCircle className="ml-2"/>
                 </Button>
             </DialogTrigger>
             <DialogContent>
+                <DialogTitle>
+                    Add a new car!
+                </DialogTitle>
                 <DialogHeader>
                     <DialogDescription asChild>
-                        <FormAddCar/>
+                        <FormAddCar setOpenDialog={setOpenDialog}/>
                     </DialogDescription>
                 </DialogHeader>
             </DialogContent>
