@@ -27,12 +27,18 @@ import {
 
 import { UploadButton } from "@/utils/uploadthing"
 import { useState } from "react"
+import { Dispatch, SetStateAction } from "react"
 
-export function FormAddCar() {
+interface FormAddCarProps {
+    setOpenDialog: Dispatch<SetStateAction<boolean>>
+}
+
+export function FormAddCar({ setOpenDialog }: FormAddCarProps) {
     const [photo, setPhoto] = useState(false);
     
     const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
+      mode: "onChange",
       defaultValues: {
         name: "",
         cv: "",
@@ -48,6 +54,12 @@ export function FormAddCar() {
 
     const onSubmit = async(values: z.infer<typeof formSchema>) => {
       console.log(values);
+      try {
+            console.log(values);            
+            setOpenDialog(false); 
+          } catch (error) {
+            console.log(error)
+        }
     }
 
     const { isValid } = form.formState;
@@ -202,14 +214,13 @@ export function FormAddCar() {
                         ) : (
                         <UploadButton 
                         className="rounded-lg bg-slate-600/20 text-slate-800 outline-dotted outline-3"
-                        {...field}
                         endpoint="photo"
                         onClientUploadComplete={(res) => {
-                          form.setValue("photo", res?.[0].ufsUrl)
+                          form.setValue("photo", res?.[0].ufsUrl, { shouldValidate: true });
                           setPhoto(true);
                           }}
                           onUploadError={(error: Error) => {
-                            alert(`ERROR! ${error.message}`);
+                            console.log(`ERROR! ${error.message}`);
                           }}
                         />
                         )}        
