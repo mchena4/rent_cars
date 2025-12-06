@@ -3,8 +3,8 @@ import { auth } from "@clerk/nextjs/server";
 
 const f = createUploadthing();
 
-const handleAuth = () => {
-  const userId  = auth();
+const handleAuth = async() => {
+  const {userId} = await auth();
   
   if (!userId) throw new Error("Unauthorized");
   return { userId };
@@ -12,7 +12,7 @@ const handleAuth = () => {
 
 export const ourFileRouter = {
   photo: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
-    .middleware(async () => handleAuth())
+    .middleware(async () => await handleAuth())
     .onUploadComplete(async ({ metadata, file }) => {
       console.log("user:", metadata.userId);
       console.log("URL:", file.ufsUrl);
