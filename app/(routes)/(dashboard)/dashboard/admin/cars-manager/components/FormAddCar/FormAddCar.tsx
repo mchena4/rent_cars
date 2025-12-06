@@ -4,6 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
+import axios from "axios"
+
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -28,7 +30,9 @@ import {
 import { UploadButton } from "@/utils/uploadthing"
 import { useState } from "react"
 import { Dispatch, SetStateAction } from "react"
+import { toast } from "sonner"
 
+import { useRouter } from "next/navigation"
 interface FormAddCarProps {
     setOpenDialog: Dispatch<SetStateAction<boolean>>
 }
@@ -52,15 +56,20 @@ export function FormAddCar({ setOpenDialog }: FormAddCarProps) {
       },
     });
 
+    const router = useRouter();
+
     const onSubmit = async(values: z.infer<typeof formSchema>) => {
       console.log(values);
+      setOpenDialog(false); 
       try {
-            console.log(values);            
-            setOpenDialog(false); 
+            await axios.post("/api/car", values);
+            toast.success("Car added successfully!");
+            router.refresh();
           } catch (error) {
+            toast.error("Something went wrong.");
             console.log(error)
         }
-    }
+    };
 
     const { isValid } = form.formState;
 
