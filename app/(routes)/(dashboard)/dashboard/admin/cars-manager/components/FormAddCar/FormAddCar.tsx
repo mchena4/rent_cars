@@ -59,7 +59,6 @@ export function FormAddCar({ setOpenDialog }: FormAddCarProps) {
     const router = useRouter();
 
     const onSubmit = async(values: z.infer<typeof formSchema>) => {
-      console.log(values);
       setOpenDialog(false); 
       try {
             await axios.post("/api/car", values);
