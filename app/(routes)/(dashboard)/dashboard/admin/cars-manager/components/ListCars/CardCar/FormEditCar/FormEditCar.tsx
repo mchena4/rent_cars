@@ -58,12 +58,12 @@ export function FormEditCar(props: FormEditCarProps) {
     const router = useRouter();
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
+      try {
+        await axios.patch(`/api/cars/${carData.id}`, values);
+        toast.success("Car updated successfully");
+        router.refresh();
         setOpenDialog(false);
-        try {
-            await axios.patch(`/api/cars/${carData.id}`, values);
-            toast.success("Car updated successfully");
-            router.refresh();
-        } catch (error) {
+      } catch (error) {
             toast.error("There was an error updating the car");
             console.log(error);
         }
