@@ -18,7 +18,7 @@ export function ButtonEditCar(props: ButtonEditCarProps) {
   const [openDialog, setOpenDialog] = useState(false)
 
   return(
-    <Dialog open={openDialog}>
+    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger asChild>
         <Button variant="outline" onClick={() => setOpenDialog(true)}>
           Edit
