@@ -4,11 +4,11 @@ import prisma from "@/lib/prisma";
 
 export async function PATCH(
     req: Request,
-    { params }: { params: { carId: string } }
+    { params }: { params: Promise<{ carId: string }> }
     )  {
         try {
             const { userId } = await auth();
-            const { carId } = params 
+            const { carId } = await params 
             const values = await req.json();
 
             if (!userId) {
