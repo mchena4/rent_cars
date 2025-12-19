@@ -10,21 +10,37 @@ import axios from "axios";
 
 
 export function CardCar(props: CardCarProps) {
-  const {car} = props;
+    const {car} = props;
 
-  const router = useRouter()
+    const router = useRouter()
 
-  const deleteCar = async () => {
-    try {
-        await axios.delete(`/api/car/${car.id}`); 
-        toast.success("The car has been removed")
-        router.refresh()
-    } catch (error){
-        console.log(error)
-        toast.error("Something wen't wrong")
+    const deleteCar = async () => {
+        try {
+            await axios.delete(`/api/car/${car.id}`); 
+            toast.success("The car has been removed")
+            router.refresh()
+        } catch (error){
+            console.log(error)
+            toast.error("Something wen't wrong")
+        }
     }
-  }
-  
+
+    const handlePublishCar = async(publish: boolean) => {
+        try{
+            await axios.patch(`/api/car/${car.id}`, {isPublished: publish}) 
+            if (publish){
+            toast.success("The car is published now!")
+            } else {
+                toast.success("The car is not published now!")
+            }
+            router.refresh()
+        }
+        catch(error){
+            console.log(error)
+            toast.error("Something went wrong")
+        }
+    }
+
     return (
     <div className="relative p-1 bg-white rounded-lg shadow-md hover:shadow-lg">
         <Image
@@ -85,11 +101,11 @@ export function CardCar(props: CardCarProps) {
             {car.isPublish ? (
                 <Button className="w-full mt-3" 
                 variant="outline"
-                onClick={() => console.log("Unpublish")}
+                onClick={() => handlePublishCar(false)}
                 >Unpublish</Button>
                 ) : (
                 <Button className="w-full mt-3" 
-                onClick={() => console.log("Publish")}
+                onClick={() => handlePublishCar(true)}
                 >
                     Publish
                     <Upload className="w-4 h-4 ml-2" />
