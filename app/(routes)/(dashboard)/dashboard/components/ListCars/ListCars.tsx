@@ -1,9 +1,11 @@
+"use client"
 import { Car } from "@/lib/generated/prisma/client"
 
 import { ListCarsProps } from "./ListCars.types"
 import Image from "next/image"
 
 import { Fuel, Gauge, Gem, Users, Wrench, Heart } from "lucide-react";
+import { ModalAddReservation } from "@/components/Shared/ModalAddReservation";
 
 export  function ListCars(props: ListCarsProps) {
     const { cars } = props
@@ -59,7 +61,7 @@ export  function ListCars(props: ListCarsProps) {
                         </p>
 
                         <div className="flex items-center justify-center gap-x-3">
-                            <p>Modal Add Reservation</p>
+                            <ModalAddReservation car={car} />
                             <Heart
                             className="mt-2 cursor-pointer"                            
                             />
