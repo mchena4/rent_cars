@@ -18,13 +18,23 @@ import { CalendarSelector } from "./Calendar";
 import { addDays } from "date-fns";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
+import axios from "axios";
+import { toast } from "sonner";
 
 
 export function ModalAddReservation(props: ModalAddReservationProps) {
   const { car } = props;
 
   const onReserveCar = async (car: Car, dateSelected: DateRange) => {
-    console.log("Reserve Car")
+    const response = await axios.post("/api/checkout", {
+      carId: car.id,
+      priceDay: car.priceDay,
+      startDate: dateSelected.from,
+      endDate: dateSelected.to,
+      carName: car.name
+    });
+
+    toast.success("Reservation created successfully!")
   };
   
   const [dateSelected, setDateSelected] = useState<{
