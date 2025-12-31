@@ -36,6 +36,8 @@ model Order {
   orderEndDate DateTime @default(now())
   status String @db.Text
   totalAmount String @db.Text
+  paypalOrderId   String?  @db.Text
+  paypalPayerId   String?  @db.Text
 
   car Car @relation(fields: [carId], references: [id], onDelete: Cascade)
 
