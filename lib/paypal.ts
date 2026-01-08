@@ -1,12 +1,13 @@
-const PAYPAL_API = process.env.NODE_ENV === 'production' 
-    ? 'https://api-m.paypal.com' 
-    : 'https://api-m.sandbox.paypal.com';
+const PAYPAL_API = 'https://api-m.paypal.com' 
 
+// Get access token for PayPal API
 export async function getPayPalAccessToken(): Promise<string> {
+    // Credentials with Basic
     const auth = Buffer.from(
         `${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`
     ).toString('base64');
 
+    // Petition for Token
     const response = await fetch(`${PAYPAL_API}/v1/oauth2/token`, {
         method: 'POST',
         headers: {
@@ -17,17 +18,21 @@ export async function getPayPalAccessToken(): Promise<string> {
         cache: 'no-store',
     });
 
+    // Check for errors
     if (!response.ok) {
         throw new Error('Failed to get PayPal access token');
     }
 
+    // Parse JSON response
     const data = await response.json();
     return data.access_token;
 }
 
+// Payment order in PayPal
 export async function createPayPalOrder(totalAmount: number, description: string) {
     const accessToken = await getPayPalAccessToken();
 
+    // 
     const response = await fetch(`${PAYPAL_API}/v2/checkout/orders`, {
         method: 'POST',
         headers: {
@@ -36,8 +41,10 @@ export async function createPayPalOrder(totalAmount: number, description: string
         },
         body: JSON.stringify({
             intent: 'CAPTURE',
+            // Array of items that are being purchased
             purchase_units: [
             {
+            // Price details
             amount: {
                 currency_code: 'USD',
                 value: totalAmount.toFixed(2),
@@ -45,8 +52,9 @@ export async function createPayPalOrder(totalAmount: number, description: string
             description,
             },
         ],
+        // User experience details
         application_context: {
-            brand_name: 'Alquiler de Autos',
+            brand_name: 'Rent Cars',
             shipping_preference: 'NO_SHIPPING',
             user_action: 'PAY_NOW',
         }
@@ -54,6 +62,7 @@ export async function createPayPalOrder(totalAmount: number, description: string
         cache: 'no-store',
     });
 
+    // Check for errors
     if (!response.ok) {
         const error = await response.json();
         console.error('PayPal Error:', error);
@@ -63,9 +72,11 @@ export async function createPayPalOrder(totalAmount: number, description: string
     return await response.json();
 }
 
+// Capture payment order in PayPal
 export async function capturePayPalOrder(orderId: string) {
     const accessToken = await getPayPalAccessToken();
     
+    // Petition with order ID (check and validate payment)
     const response = await fetch(
         `${PAYPAL_API}/v2/checkout/orders/${orderId}/capture`,
         {
@@ -77,6 +88,7 @@ export async function capturePayPalOrder(orderId: string) {
         cache: 'no-store',
     });
 
+    // Check for errors
     if (!response.ok) {
         const error = await response.json();
         console.error('PayPal Capture Error:', error);
