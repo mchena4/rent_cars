@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { ModalAddReservationProps } from "./ModalAddReservation.types"
 import {
@@ -17,24 +17,43 @@ import { Car } from "@/lib/generated/prisma/client";
 import { CalendarSelector } from "./Calendar";
 import { addDays } from "date-fns";
 import { useState } from "react";
-import { DateRange } from "react-day-picker";
-import axios from "axios";
-import { toast } from "sonner";
+import { DateRange } from "react-day-picker";import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 
 export function ModalAddReservation(props: ModalAddReservationProps) {
   const { car } = props;
-
+  const router  = useRouter();
+  
   const onReserveCar = async (car: Car, dateSelected: DateRange) => {
-    const response = await axios.post("/api/checkout", {
-      carId: car.id,
-      priceDay: car.priceDay,
-      startDate: dateSelected.from,
-      endDate: dateSelected.to,
-      carName: car.name
-    });
+    if (!dateSelected.from || !dateSelected.to) {
+      toast.error("Please select the rental dates");
+      return;
+    }
 
-    toast.success("Reservation created successfully!")
+    if (dateSelected.to <= dateSelected.from) {
+      toast.error("The end date must be later than the start date");
+      return;
+    }
+    
+    try {
+        const from: Date = dateSelected.from;
+        const to: Date = dateSelected.to;
+        
+        const params = new URLSearchParams({
+          carId: car.id,
+          carName: car.name,
+          priceDay: car.priceDay,
+          startDate: from.toISOString(),
+          endDate: to.toISOString(),
+        });
+
+        router.push(`/checkout?${params.toString()}`);
+      } catch (error) {
+      console.log("Error:", error)
+      toast.error("Error creating reservation")
+    }
+
   };
   
   const [dateSelected, setDateSelected] = useState<{
