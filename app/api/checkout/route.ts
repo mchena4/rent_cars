@@ -10,14 +10,12 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
 };
 
-export async function POST(req: Request, {params}: {params: {
-    carId: string,
-    priceDay: string,
-    startDate: Date,
-    endDate: Date,
-    carName: string
-}}) {
-    const { userId } = await auth()
+export async function OPTIONS() {
+    return new NextResponse(null, { headers: corsHeaders });
+}
+
+export async function POST(req: Request) {
+    const { userId } = await auth();
     const {carId, priceDay, startDate, endDate, carName} = await req.json()
 
     if (!userId) {
